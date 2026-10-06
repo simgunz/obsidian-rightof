@@ -67,19 +67,24 @@ export class DiagramModal extends Modal {
 		let swallowClick = false;
 		this.stage.addEventListener('pointerdown', (event) => {
 			if (event.button !== 0) return;
-			this.stage.setPointerCapture(event.pointerId);
 			last = { x: event.clientX, y: event.clientY };
 			travelled = 0;
 			swallowClick = false;
 		});
 		this.stage.addEventListener('pointermove', (event) => {
 			if (!last) return;
+			if ((event.buttons & 1) === 0) {
+				last = null;
+				return;
+			}
 			const dx = event.clientX - last.x;
 			const dy = event.clientY - last.y;
 			last = { x: event.clientX, y: event.clientY };
 			travelled += Math.abs(dx) + Math.abs(dy);
-			if (travelled > DRAG_THRESHOLD_PX) {
+			// Capturing on pointerdown would retarget every click to the stage, so links could never be clicked.
+			if (travelled > DRAG_THRESHOLD_PX && !swallowClick) {
 				swallowClick = true;
+				this.stage.setPointerCapture(event.pointerId);
 				this.stage.addClass('is-dragging');
 			}
 			this.apply(panBy(this.view, dx, dy));
