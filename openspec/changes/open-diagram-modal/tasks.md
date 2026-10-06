@@ -13,7 +13,7 @@
 ## 3. Entry points
 
 - [x] 3.1 Add the expand button to `DiagramChild` (hover only, clear of `</>` in Live Preview, does not move the cursor, absent on errors) and verify `npm run build` and `npm run lint` pass
-- [ ] 3.2 Register the "Open reladraw diagram" command with `checkCallback` (cursor block, else first; first in Reading view; hidden without blocks) and verify `npm run build` and `npm run lint` pass
+- [x] 3.2 Register the "Open reladraw diagram" command with `checkCallback` (cursor block, else first; first in Reading view; hidden without blocks) and verify `npm run build` and `npm run lint` pass
 - [ ] 3.3 Update README.md usage with the expand button, the command and the modal controls, and verify the described controls match the built plugin
 
 ## 4. Integration
