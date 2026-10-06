@@ -1,6 +1,6 @@
 import { THEMES } from 'reladraw';
 import { describe, expect, test } from 'vitest';
-import { renderDiagram } from './render';
+import { errorTitle, renderDiagram } from './render';
 
 function background(svg: string): string | undefined {
 	return /<rect[^>]*fill="([^"]+)"/.exec(svg)?.[1];
@@ -61,5 +61,15 @@ describe('renderDiagram', () => {
 		const result = renderDiagram('node a "A"', { dark: false, compile: () => { throw new Error('boom'); } });
 
 		expect(result).toEqual({ ok: false, message: 'boom' });
+	});
+});
+
+describe('errorTitle', () => {
+	test('names the line when reladraw gives one', () => {
+		expect(errorTitle({ ok: false, line: 3, message: 'x' })).toBe('reladraw: line 3');
+	});
+
+	test('stays generic without a line', () => {
+		expect(errorTitle({ ok: false, message: 'x' })).toBe('reladraw:');
 	});
 });

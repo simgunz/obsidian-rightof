@@ -12,7 +12,7 @@
 
 ## 3. Obsidian glue
 
-- [ ] 3.1 Implement `DiagramChild` (SVG through DOMParser, the error box, a re-render on `css-change` when the mode changed) and register the `reladraw` code-block processor in main.ts; verify `npm run build` and `npm run lint` pass
+- [x] 3.1 Implement `DiagramChild` (SVG through DOMParser, the error box, a re-render on `css-change` when the mode changed) and register the `reladraw` code-block processor in main.ts; verify `npm run build` and `npm run lint` pass
 - [ ] 3.2 Add styles.css (the diagram fits the column; the error box uses the Obsidian error colours and monospace) and verify it is loaded in the end-to-end check
 
 ## 4. Docs and integration

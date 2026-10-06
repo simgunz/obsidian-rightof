@@ -4,6 +4,8 @@ export type RenderResult =
 	| { ok: true; svg: string }
 	| { ok: false; line?: number; message: string };
 
+export type RenderFailure = Extract<RenderResult, { ok: false }>;
+
 export interface RenderOptions {
 	dark: boolean;
 	compile?: typeof reladrawCompile;
@@ -19,6 +21,10 @@ export function renderDiagram(source: string, options: RenderOptions): RenderRes
 		if (error instanceof SourceError) return { ok: false, line: error.line, message: error.message };
 		return { ok: false, message: error instanceof Error ? error.message : String(error) };
 	}
+}
+
+export function errorTitle(failure: RenderFailure): string {
+	return failure.line === undefined ? 'reladraw:' : `reladraw: line ${failure.line}`;
 }
 
 function modeTheme(dark: boolean): Theme {
