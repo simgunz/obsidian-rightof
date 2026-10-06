@@ -2,7 +2,7 @@
 
 ## 1. Pure logic
 
-- [ ] 1.1 Implement `src/viewport.ts` (`zoomAt` with clamping to 10%-1000% that keeps the point fixed, `fit` that scales and centres with padding, `panBy`) and verify unit tests cover the fixed point, both clamps, fitting a small and a large diagram, and panning
+- [x] 1.1 Implement `src/viewport.ts` (`zoomAt` with clamping to 10%-1000% that keeps the point fixed, `fit` that scales and centres with padding, `panBy`) and verify unit tests cover the fixed point, both clamps, fitting a small and a large diagram, and panning
 - [ ] 1.2 Implement `src/blocks.ts` (`findBlocks` with CommonMark fence rules, `blockAt`) and verify unit tests cover backtick and tilde fences, a longer closing fence, an unclosed fence, a fake fence inside a `js` block, two blocks, and a cursor inside, on and outside the fences
 
 ## 2. Modal
