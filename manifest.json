@@ -1,0 +1,9 @@
+{
+	"id": "rightof",
+	"name": "Right Of",
+	"version": "0.1.0",
+	"minAppVersion": "1.5.0",
+	"description": "Render reladraw diagrams in your notes.",
+	"author": "Simone Gaiarin",
+	"isDesktopOnly": true
+}
