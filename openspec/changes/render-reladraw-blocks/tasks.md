@@ -3,7 +3,7 @@
 ## 1. Scaffold
 
 - [x] 1.1 Add the sample-plugin layout (package.json, esbuild.config.mjs, tsconfig.json, manifest.json with id `rightof` and isDesktopOnly true, versions.json, version-bump.mjs, eslint.config.mts, .gitignore, a src/main.ts that loads) and verify `npm install`, `npm run build` and `npm run lint` succeed and `main.js` appears
-- [ ] 1.2 Add vitest with jsdom and an `obsidian` mock alias, plus `reladraw` pinned to exactly 0.15.1, and verify `npm test` runs a placeholder test and `npm ls reladraw` shows 0.15.1
+- [x] 1.2 Add vitest with jsdom and an `obsidian` mock alias, plus `reladraw` pinned to exactly 0.15.1, and verify `npm test` runs a placeholder test and `npm ls reladraw` shows 0.15.1
 
 ## 2. Render logic
 
