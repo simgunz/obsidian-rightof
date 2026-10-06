@@ -44,11 +44,11 @@ Obsidian's `Modal` already closes on Esc, on its close button and on a backdrop 
 - **Rendering:** it renders with `renderDiagram`, using `body.theme-dark` at open time. The SVG goes through the same `DOMParser` path as the note, shared through one helper in `src/svg.ts`. An error shows the same error box.
 - **Size:** the class `rightof-modal` sets the size to 90vw × 85vh.
 - **Toolbar:** `-`, a percentage button, `+` and fit, laid out on a row above the viewing area. All buttons are `clickable-icon`, with `setIcon` icons `zoom-out`, `zoom-in` and `scan` and an `aria-label`.
-- **Fitting:** on open, `fit` runs after layout, in a `requestAnimationFrame`, because the area has no size before that. The diagram's natural size comes from the SVG's `width` and `height` attributes.
+- **Fitting:** on open, `fit` runs at once, because the modal is attached and laid out by then. If the area still has no size, a one-time `ResizeObserver` fits it when it gets one. A `requestAnimationFrame` is not used, because it never fires while the window gets no frames. The diagram's natural size comes from the SVG's `width` and `height` attributes.
 
 **4. Pointer handling in the viewing area.**
 - **Wheel:** `deltaY` maps to a factor of `exp(-deltaY * 0.0015)` around the pointer. The listener uses `{ passive: false }` and calls `preventDefault`, so the modal never scrolls.
-- **Drag:** `pointerdown` with button 0 calls `setPointerCapture`, and `pointermove` pans. Once the drag has moved more than 3 px, a `click` listener in the capture phase swallows the next click, so a link under the release point does not open.
+- **Drag:** `pointerdown` with button 0 starts tracking, and `pointermove` pans. Once the drag has moved more than 3 px, the stage captures the pointer, and a `click` listener in the capture phase swallows the next click, so a link under the release point does not open. Capturing earlier, on `pointerdown`, would retarget every click to the stage, so no link could be clicked.
 - **Double-click:** fits.
 - **Alternative:** Ctrl+wheel to zoom and a plain wheel to scroll, as in-note plugins do. The modal has nothing to scroll, so a plain wheel zoom is the expected lightbox behaviour.
 

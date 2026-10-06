@@ -79,7 +79,7 @@ In the modal, the mouse wheel SHALL zoom in and out, keeping the point under the
 - **THEN** the zoom becomes 100% and the percentage reads `100%`
 
 ### Requirement: The user can pan in the modal
-In the modal, dragging with the primary mouse button SHALL move the diagram with the pointer. A drag SHALL NOT activate a link in the diagram when the button is released.
+In the modal, dragging with the primary mouse button SHALL move the diagram with the pointer. A drag SHALL NOT activate a link in the diagram when the button is released. A click without a drag SHALL still activate the link under the pointer.
 
 #### Scenario: Drag
 - **WHEN** the user drags the diagram 100 pixels to the left
@@ -88,6 +88,10 @@ In the modal, dragging with the primary mouse button SHALL move the diagram with
 #### Scenario: Drag ends on a link
 - **WHEN** the user starts a drag and releases the button over a node that links somewhere
 - **THEN** the link does not open
+
+#### Scenario: Click on a link
+- **WHEN** the user clicks a node that links somewhere, without dragging
+- **THEN** the link opens
 
 ### Requirement: Double-click fits the diagram again
 In the modal, a double-click on the viewing area SHALL fit and centre the diagram, as when the modal opened.
