@@ -24,3 +24,70 @@
 	color: var(--text-normal);
 	background: none;
 }
+
+.rightof-modal {
+	width: 90vw;
+	max-width: 90vw;
+	height: 85vh;
+	max-height: 85vh;
+}
+
+.rightof-modal .modal-content {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	min-height: 0;
+	gap: var(--size-4-2);
+}
+
+.rightof-toolbar {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: var(--size-4-1);
+}
+
+.rightof-zoom-level {
+	min-width: 4.5em;
+	font-variant-numeric: tabular-nums;
+}
+
+.rightof-stage {
+	position: relative;
+	flex: 1;
+	min-height: 0;
+	overflow: hidden;
+	cursor: grab;
+	touch-action: none;
+	user-select: none;
+	border-radius: var(--radius-m);
+	background-color: var(--background-primary);
+}
+
+.rightof-stage.is-dragging {
+	cursor: grabbing;
+}
+
+.rightof-stage.is-error {
+	cursor: auto;
+	overflow: auto;
+	user-select: text;
+}
+
+.rightof-stage-content {
+	position: absolute;
+	top: 0;
+	left: 0;
+	transform-origin: 0 0;
+	transform: translate(var(--rightof-x, 0), var(--rightof-y, 0)) scale(var(--rightof-scale, 1));
+}
+
+.rightof-stage.is-error .rightof-stage-content {
+	position: static;
+	transform: none;
+}
+
+.rightof-stage-content svg {
+	display: block;
+	max-width: none;
+}

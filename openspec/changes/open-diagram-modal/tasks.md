@@ -8,7 +8,7 @@
 ## 2. Modal
 
 - [x] 2.1 Move the SVG parsing and the error box from `DiagramChild` into `src/svg.ts`, unchanged in behaviour, and verify `npm test`, `npm run build` and `npm run lint` pass
-- [ ] 2.2 Implement `DiagramModal` (fit on open, wheel zoom at the pointer, `-` / `+` / percentage / fit toolbar, drag to pan with the click swallowed after a drag, double-click to fit, error box for an invalid source) with its styles, and verify `npm run build` and `npm run lint` pass
+- [x] 2.2 Implement `DiagramModal` (fit on open, wheel zoom at the pointer, `-` / `+` / percentage / fit toolbar, drag to pan with the click swallowed after a drag, double-click to fit, error box for an invalid source) with its styles, and verify `npm run build` and `npm run lint` pass
 
 ## 3. Entry points
 
