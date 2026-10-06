@@ -24,6 +24,24 @@ The block shows the diagram in Reading view and in Live Preview. To edit it in L
 - **Theme:** the diagram uses reladraw's light or dark theme to match Obsidian. A diagram that names its own theme, with `diagram theme: nord`, keeps it.
 - **Syntax:** see reladraw's [SYNTAX.md](https://github.com/reladraw/reladraw/blob/main/SYNTAX.md).
 
+### Look at a diagram up close
+
+The diagram in the note is a static image. To zoom and pan, open it in a large view:
+
+- Hover the diagram and press the expand button (next to `</>` in Live Preview).
+- Or run the command **Right Of: Open reladraw diagram**. It opens the diagram under the cursor, or the note's first diagram. You can bind it to a hotkey in **Settings → Hotkeys**.
+
+In the large view:
+
+| To | Do |
+| --- | --- |
+| Zoom toward a point | Turn the mouse wheel over it |
+| Zoom around the centre | Press `-` or `+` |
+| Go back to 100% | Click the percentage |
+| Pan | Drag |
+| Fit the diagram to the window | Double-click, or press the fit button |
+| Close | Esc, the close button, or a click outside |
+
 ## Install by hand
 
 The plugin is not in the community plugin list yet.

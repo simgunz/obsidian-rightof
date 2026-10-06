@@ -14,11 +14,11 @@
 
 - [x] 3.1 Add the expand button to `DiagramChild` (hover only, clear of `</>` in Live Preview, does not move the cursor, absent on errors) and verify `npm run build` and `npm run lint` pass
 - [x] 3.2 Register the "Open reladraw diagram" command with `checkCallback` (cursor block, else first; first in Reading view; hidden without blocks) and verify `npm run build` and `npm run lint` pass
-- [ ] 3.3 Update README.md usage with the expand button, the command and the modal controls, and verify the described controls match the built plugin
+- [x] 3.3 Update README.md usage with the expand button, the command and the modal controls, and verify the described controls match the built plugin
 
 ## 4. Integration
 
-- [ ] 4.1 Run the end-to-end check in the sandbox Obsidian: the button opens the modal in Reading view and Live Preview with the block still rendered, both buttons visible without overlap, no button on an error, the command picks the right block in source and Reading view and is hidden without blocks, the diagram opens fitted, wheel and buttons zoom with clamping and the percentage updates, clicking the percentage gives 100%, a drag pans, a drag ending on a link does not navigate, a double-click fits, Esc and the backdrop close, the wheel over a note diagram scrolls the note
+- [x] 4.1 Run the end-to-end check in the sandbox Obsidian: the button opens the modal in Reading view and Live Preview with the block still rendered, both buttons visible without overlap, no button on an error, the command picks the right block in source and Reading view and is hidden without blocks, the diagram opens fitted, wheel and buttons zoom with clamping and the percentage updates, clicking the percentage gives 100%, a drag pans, a drag ending on a link does not navigate, a double-click fits, Esc and the backdrop close, the wheel over a note diagram scrolls the note
 
 ## Workflow follow-up
 
