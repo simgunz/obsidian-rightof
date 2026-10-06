@@ -8,7 +8,7 @@
 ## 2. Render logic
 
 - [x] 2.1 Implement `renderDiagram(source, { dark })` in src/render.ts and verify unit tests cover a valid block, a SourceError with its line, an empty block, and a non-source error
-- [ ] 2.2 Add the theme rule (dark/light by mode with a transparent background; a file's own `diagram theme:` wins with its own background) and verify unit tests cover both modes and a named theme in each mode
+- [x] 2.2 Add the theme rule (dark/light by mode with a transparent background; a file's own `diagram theme:` wins with its own background) and verify unit tests cover both modes and a named theme in each mode
 
 ## 3. Obsidian glue
 
