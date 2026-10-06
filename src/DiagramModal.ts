@@ -44,7 +44,7 @@ export class DiagramModal extends Modal {
 		iconButton(toolbar, 'scan', 'Fit to window', () => this.fitToStage());
 
 		this.listen();
-		window.requestAnimationFrame(() => this.fitToStage());
+		this.fitWhenSized();
 	}
 
 	onClose(): void {
@@ -104,6 +104,19 @@ export class DiagramModal extends Modal {
 			{ capture: true },
 		);
 		this.stage.addEventListener('dblclick', () => this.fitToStage());
+	}
+
+	private fitWhenSized(): void {
+		if (this.stage.clientWidth > 0) {
+			this.fitToStage();
+			return;
+		}
+		const observer = new ResizeObserver(() => {
+			if (this.stage.clientWidth === 0) return;
+			observer.disconnect();
+			this.fitToStage();
+		});
+		observer.observe(this.stage);
 	}
 
 	private stagePoint(event: MouseEvent): Point {
