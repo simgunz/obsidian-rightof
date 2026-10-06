@@ -1,0 +1,26 @@
+.rightof-diagram svg {
+	display: block;
+	max-width: 100%;
+	height: auto;
+	margin: 0 auto;
+}
+
+.rightof-error {
+	padding: var(--size-4-2) var(--size-4-3);
+	border-radius: var(--radius-s);
+	background-color: rgba(var(--color-red-rgb), 0.1);
+	color: var(--text-error);
+}
+
+.rightof-error-title {
+	font-weight: var(--font-semibold);
+}
+
+.rightof-error-message {
+	margin: var(--size-4-1) 0 0;
+	white-space: pre-wrap;
+	font-family: var(--font-monospace);
+	font-size: var(--font-ui-small);
+	color: var(--text-normal);
+	background: none;
+}

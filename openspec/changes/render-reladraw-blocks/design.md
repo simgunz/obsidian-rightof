@@ -45,7 +45,7 @@ Obsidian facts, from the 1.13.7 app bundle and `obsidian.d.ts`:
 
 **5. Fit to the column with CSS.** `.rightof-diagram svg { max-width: 100%; height: auto; }`. The SVG has a `viewBox`, so it keeps its proportions. No JS measuring.
 
-**6. The error box is plain DOM.** `div.rightof-error` holds a title line `reladraw: line N` (or `reladraw:`) and the message in a `<pre>`. It uses the colours from `--background-modifier-error` and `--text-error`, and `--font-monospace` for the message.
+**6. The error box is plain DOM.** `div.rightof-error` holds a title line `reladraw: line N` (or `reladraw:`) and the message in a `<pre>`. It uses `--text-error` on a faint red background (`--color-red-rgb` at 10%, as callouts do), and `--font-monospace` for the message.
 
 **7. The scaffold follows obsidian-sample-plugin.**
 - Build: esbuild from `src/main.ts` to the root `main.js`. `tsc -noEmit` runs as the type check, and eslint uses `obsidianmd.configs.recommended`.
