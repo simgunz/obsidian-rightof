@@ -1,32 +1,27 @@
 schema: spec-driven
 
-# Project context (optional)
-# This is shown to AI when creating artifacts.
-# Add your tech stack, conventions, style guides, domain knowledge, etc.
-# Example:
-#   context: |
-#     Tech stack: TypeScript, React, Node.js
-#     We use conventional commits
-#     Domain: e-commerce platform
+context: |
+  Right Of is an Obsidian community plugin that renders reladraw diagrams
+  (https://github.com/reladraw/reladraw) written in ```reladraw code blocks.
+  reladraw is a text diagram language where the source states where things go.
+  The plugin is called "Right Of", never "reladraw": reladraw's NOTICE reserves
+  its name for the upstream project. Describing the origin ("renders reladraw
+  diagrams") is fine.
 
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always include a "Non-goals" section
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
+  Platform: Obsidian desktop only (manifest isDesktopOnly: true). No mobile work.
+  reladraw is pinned to an exact version (0.15.1) because its syntax still changes.
 
-# Per-operation guidance (optional)
-# Add advisory guidance for how apply and archive work should be conducted.
-# This is separate from artifact rules above.
-# Example:
-#   operations:
-#     apply:
-#       guidance:
-#         - Keep test summaries concise
-#     archive:
-#       guidance:
-#         - Summarize the archive outcome before finishing
+  Stack: TypeScript, the obsidian-sample-plugin layout (esbuild bundles src/main.ts
+  to main.js at the repo root), vitest with jsdom for tests, eslint with
+  eslint-plugin-obsidianmd. Run everything with npm scripts: test, build, lint.
+
+  Conventions:
+  - Pure logic lives in modules that do not import `obsidian`, so vitest can test
+    it directly. Obsidian glue (render children, modals, commands) stays thin.
+  - Never assign innerHTML. Turn reladraw's SVG string into DOM with DOMParser.
+  - Style with Obsidian CSS variables so the plugin follows the user's theme.
+    Prefix every CSS class with `rightof-`.
+  - UX follows Obsidian and the common diagram-plugin patterns: a static diagram
+    in the note, Obsidian's own edit button, zoom and pan only in a modal.
+  - Spec domains are named after user-facing features (diagram-rendering,
+    diagram-modal).
