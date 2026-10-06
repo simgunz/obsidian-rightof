@@ -13,12 +13,12 @@
 ## 3. Obsidian glue
 
 - [x] 3.1 Implement `DiagramChild` (SVG through DOMParser, the error box, a re-render on `css-change` when the mode changed) and register the `reladraw` code-block processor in main.ts; verify `npm run build` and `npm run lint` pass
-- [ ] 3.2 Add styles.css (the diagram fits the column; the error box uses the Obsidian error colours and monospace) and verify it is loaded in the end-to-end check
+- [x] 3.2 Add styles.css (the diagram fits the column; the error box uses the Obsidian error colours and monospace) and verify it is loaded in the end-to-end check
 
 ## 4. Docs and integration
 
-- [ ] 4.1 Write README.md (what it does, manual install, dev loop, usage with an example block) and verify every command it lists runs as written
-- [ ] 4.2 Run the end-to-end check in an isolated desktop Obsidian: positive control with the plugin off, then with it on: SVG in Reading view and Live Preview, the edit button shows the source, an edit re-renders, the error box shows `line N`, a mode switch changes the colours, a named theme is kept, other code blocks are untouched, a wide diagram has no horizontal scroll
+- [x] 4.1 Write README.md (what it does, manual install, dev loop, usage with an example block) and verify every command it lists runs as written
+- [x] 4.2 Run the end-to-end check in an isolated desktop Obsidian: positive control with the plugin off, then with it on: SVG in Reading view and Live Preview, the edit button shows the source, an edit re-renders, the error box shows `line N`, a mode switch changes the colours, a named theme is kept, other code blocks are untouched, a wide diagram has no horizontal scroll
 
 ## Workflow follow-up
 
