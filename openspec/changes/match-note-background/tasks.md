@@ -10,7 +10,7 @@
 
 ## 3. Integration
 
-- [ ] 3.1 In the sandbox Obsidian, verify that the label box and the page box match the note background in light and dark mode, that a line no longer shows through a label (checked against the broken build first), and that switching to a theme with another background re-renders the diagram; then reinstall the build in the zettelkasten
+- [x] 3.1 In the sandbox Obsidian, verify that the label box and the page box match the note background in light and dark mode, that a line no longer shows through a label (checked against the broken build first), and that switching to a theme with another background re-renders the diagram; then reinstall the build in the zettelkasten
 
 ## Workflow follow-up
 
