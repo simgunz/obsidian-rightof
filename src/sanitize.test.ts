@@ -74,6 +74,13 @@ describe('sanitizeSvg links', () => {
 		},
 	);
 
+	test('a web href does not cover a non-web xlink:href on the same link', () => {
+		const svg = clean('<a href="https://example.com" xlink:href="javascript:alert(1)"><rect/></a>');
+
+		expect(svg.querySelector('a')).toBeNull();
+		expect(svg.querySelector('rect')).not.toBeNull();
+	});
+
 	test('a web link stays and opens in a new window without an opener', () => {
 		const svg = clean('<a href="https://example.com/x"><rect/></a>');
 

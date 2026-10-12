@@ -57,7 +57,7 @@ export function sanitizeSvg(svg: SVGSVGElement): void {
 			el.remove();
 			continue;
 		}
-		if (el.localName === 'a' && !isWebLink(linkOf(el))) {
+		if (el.localName === 'a' && !isWebLinkOnly(el)) {
 			el.replaceWith(...el.childNodes);
 		}
 	}
@@ -95,8 +95,10 @@ function cleanAttributes(el: Element): void {
 	}
 }
 
-function linkOf(el: Element): string {
-	return el.getAttribute('href') ?? el.getAttributeNS(XLINK_NS, 'href') ?? '';
+/** Both link attributes count: which one wins depends on the renderer. */
+function isWebLinkOnly(el: Element): boolean {
+	const links = [el.getAttribute('href'), el.getAttributeNS(XLINK_NS, 'href')].filter((href) => href !== null);
+	return links.length > 0 && links.every(isWebLink);
 }
 
 function isWebLink(href: string): boolean {
