@@ -19,6 +19,12 @@ export function isDarkMode(el: HTMLElement): boolean {
 	return el.ownerDocument.body.hasClass('theme-dark');
 }
 
+/** Read from body: a block can still be detached when it renders, and detached elements resolve no variables. */
+export function noteBackground(el: HTMLElement): string {
+	const body = el.ownerDocument.body;
+	return body.ownerDocument.defaultView?.getComputedStyle(body).getPropertyValue('--background-primary').trim() ?? '';
+}
+
 let copies = 0;
 
 /**

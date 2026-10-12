@@ -6,7 +6,7 @@
 
 ## 2. Obsidian glue
 
-- [ ] 2.1 Read the note's background from the block (`--background-primary`) in `DiagramChild` and `DiagramModal`, re-render a block on `css-change` when the mode or that colour changed, and verify `npm test`, `npm run build` and `npm run lint` pass
+- [x] 2.1 Read the note's background from the block (`--background-primary`) in `DiagramChild` and `DiagramModal`, re-render a block on `css-change` when the mode or that colour changed, and verify `npm test`, `npm run build` and `npm run lint` pass
 
 ## 3. Integration
 
