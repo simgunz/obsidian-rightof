@@ -122,7 +122,7 @@ function cleanAttributes(el: Element): void {
  */
 function isSafeValue(value: string): boolean {
 	if (value.includes('\\')) return false;
-	const calls = [...value.matchAll(/([A-Za-z-]+)\(([^()]*)/g)];
+	const calls = [...value.matchAll(/(?<![A-Za-z-])([A-Za-z-]+)\(([^()]*)/g)];
 	return (
 		calls.length === value.split('(').length - 1 &&
 		calls.every(([, name, args]) => ALLOWED_FUNCTIONS.has(name!) && (name !== 'url' || /^\s*['"]?#/.test(args!)))

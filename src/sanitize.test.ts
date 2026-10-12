@@ -59,6 +59,14 @@ describe('sanitizeSvg removes what could run or reach out', () => {
 		expect(Array.from(svg.querySelector('rect')!.attributes, (a) => a.name)).toEqual([]);
 	});
 
+	test('a long value is checked in linear time', () => {
+		const start = performance.now();
+
+		clean(`<rect fill="${'a'.repeat(100_000)}"/>`);
+
+		expect(performance.now() - start).toBeLessThan(500);
+	});
+
 	test('paints and transforms written with functions stay', () => {
 		const svg = clean('<rect fill="rgb(1, 2, 3)" stroke="url(\'#g\')" transform="translate(1 2) rotate(45)"/>');
 
