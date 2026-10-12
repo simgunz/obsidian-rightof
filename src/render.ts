@@ -1,4 +1,4 @@
-import { compile as reladrawCompile, parse, SourceError, THEMES, type Theme } from 'reladraw';
+import { compile, parse, SourceError, THEMES, type Theme } from 'reladraw';
 
 export type RenderResult =
 	| { ok: true; svg: string }
@@ -10,11 +10,9 @@ export interface RenderOptions {
 	dark: boolean;
 	/** The note's background colour. reladraw also fills the box behind each edge label with it. */
 	background?: string;
-	compile?: typeof reladrawCompile;
 }
 
 export function renderDiagram(source: string, options: RenderOptions): RenderResult {
-	const compile = options.compile ?? reladrawCompile;
 	try {
 		// A theme passed to compile overrides the file's own `diagram theme:`.
 		const theme = namesOwnTheme(source) ? undefined : modeTheme(options.dark, options.background);

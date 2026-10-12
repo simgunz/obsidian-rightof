@@ -32,7 +32,6 @@ describe('theme', () => {
 	test.each([true, false])('the page and the label boxes take the note background (dark: %s)', (dark) => {
 		const fills = rectFills(svgOf(labelled, dark));
 
-		expect(fills.length).toBe(2);
 		expect(fills).toEqual(['#123456', '#123456']);
 	});
 
@@ -66,12 +65,6 @@ describe('renderDiagram', () => {
 
 		expect(result.ok).toBe(false);
 		if (!result.ok) expect(result.message).not.toBe('');
-	});
-
-	test('an error that is not a source error has no line', () => {
-		const result = renderDiagram('node a "A"', { dark: false, compile: () => { throw new Error('boom'); } });
-
-		expect(result).toEqual({ ok: false, message: 'boom' });
 	});
 });
 
