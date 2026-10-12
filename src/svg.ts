@@ -50,6 +50,7 @@ const ALLOWED_ELEMENTS = new Set([
  * Keep only drawing: no scripts, HTML, style sheets, handlers, outside references or non-web links.
  */
 export function sanitizeSvg(svg: SVGSVGElement): void {
+	removeNonElementMarkup(svg);
 	for (const el of [...svg.querySelectorAll('*')]) {
 		if (!svg.contains(el)) continue;
 		if (el.namespaceURI !== SVG_NS || !ALLOWED_ELEMENTS.has(el.localName)) {
@@ -67,6 +68,14 @@ export function sanitizeSvg(svg: SVGSVGElement): void {
 			el.setAttribute('rel', 'noopener noreferrer');
 		}
 	}
+}
+
+/** A comment or processing instruction is inert here, but turns into live HTML if the SVG is ever reparsed as HTML. */
+function removeNonElementMarkup(svg: SVGSVGElement): void {
+	const walker = svg.ownerDocument.createTreeWalker(svg, NodeFilter.SHOW_COMMENT | NodeFilter.SHOW_PROCESSING_INSTRUCTION);
+	const found: Node[] = [];
+	while (walker.nextNode()) found.push(walker.currentNode);
+	for (const node of found) node.parentNode?.removeChild(node);
 }
 
 function cleanAttributes(el: Element): void {

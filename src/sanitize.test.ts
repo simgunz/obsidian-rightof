@@ -48,6 +48,12 @@ describe('sanitizeSvg removes what could run or reach out', () => {
 		expect(rect.getAttribute('mask')).toBe('url(#m)');
 	});
 
+	test('comments and processing instructions', () => {
+		const svg = clean('<!-- note --><?x <img src=x onerror=alert(1)>?><rect/>');
+
+		expect(Array.from(svg.childNodes, (node) => node.nodeName)).toEqual(['rect']);
+	});
+
 	test('a non-link href keeps only same-document references', () => {
 		const svg = clean('<linearGradient id="g" href="#base"/><linearGradient id="h" xlink:href="https://e.com/x.svg#a"/>');
 
