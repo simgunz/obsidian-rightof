@@ -42,6 +42,10 @@ In the large view:
 | Fit the diagram to the window | Double-click, or press the fit button |
 | Close | Esc, the close button, or a click outside |
 
+## How it works
+
+The drawing is reladraw's own `compile()`, bundled into the plugin. The plugin adds only what Obsidian needs around it: it picks the theme and background to pass in, inserts the SVG into the note with unique ids, and zooms and pans the finished SVG in the modal.
+
 ## Install by hand
 
 The plugin is not in the community plugin list yet.
