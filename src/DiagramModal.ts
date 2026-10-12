@@ -14,6 +14,7 @@ export class DiagramModal extends Modal {
 	private stage!: HTMLElement;
 	private content!: HTMLElement;
 	private zoomLevel!: HTMLButtonElement;
+	private observer: ResizeObserver | null = null;
 
 	constructor(
 		app: App,
@@ -47,6 +48,8 @@ export class DiagramModal extends Modal {
 	}
 
 	onClose(): void {
+		this.observer?.disconnect();
+		this.observer = null;
 		this.contentEl.empty();
 	}
 
@@ -55,25 +58,38 @@ export class DiagramModal extends Modal {
 			'wheel',
 			(event) => {
 				event.preventDefault();
-				const delta = event.deltaMode === WheelEvent.DOM_DELTA_LINE ? event.deltaY * LINE_HEIGHT_PX : event.deltaY;
+				const delta =
+					event.deltaMode === WheelEvent.DOM_DELTA_LINE
+						? event.deltaY * LINE_HEIGHT_PX
+						: event.deltaMode === WheelEvent.DOM_DELTA_PAGE
+							? event.deltaY * this.stage.clientHeight
+							: event.deltaY;
 				this.apply(zoomAt(this.view, Math.exp(-delta * WHEEL_SPEED), this.stagePoint(event)));
 			},
 			{ passive: false },
 		);
 
 		let last: Point | null = null;
+		let pointer: number | null = null;
 		let travelled = 0;
 		let swallowClick = false;
+		const endDrag = () => {
+			if (pointer !== null && this.stage.hasPointerCapture(pointer)) this.stage.releasePointerCapture(pointer);
+			last = null;
+			pointer = null;
+			this.stage.removeClass('is-dragging');
+		};
 		this.stage.addEventListener('pointerdown', (event) => {
-			if (event.button !== 0) return;
+			if (event.button !== 0 || pointer !== null) return;
 			last = { x: event.clientX, y: event.clientY };
+			pointer = event.pointerId;
 			travelled = 0;
 			swallowClick = false;
 		});
 		this.stage.addEventListener('pointermove', (event) => {
-			if (!last) return;
+			if (!last || event.pointerId !== pointer) return;
 			if ((event.buttons & 1) === 0) {
-				last = null;
+				endDrag();
 				return;
 			}
 			const dx = event.clientX - last.x;
@@ -88,14 +104,14 @@ export class DiagramModal extends Modal {
 			}
 			this.apply(panBy(this.view, dx, dy));
 		});
-		const endDrag = (event: PointerEvent) => {
-			if (!last) return;
-			last = null;
-			this.stage.removeClass('is-dragging');
-			if (this.stage.hasPointerCapture(event.pointerId)) this.stage.releasePointerCapture(event.pointerId);
+		const endIfOwn = (event: PointerEvent) => {
+			if (event.pointerId === pointer) endDrag();
 		};
-		this.stage.addEventListener('pointerup', endDrag);
-		this.stage.addEventListener('pointercancel', endDrag);
+		this.stage.addEventListener('pointerup', endIfOwn);
+		this.stage.addEventListener('pointercancel', endIfOwn);
+		this.stage.addEventListener('lostpointercapture', endIfOwn);
+		// A drag that starts on a link would otherwise start the browser's own link drag and cancel the pan.
+		this.stage.addEventListener('dragstart', (event) => event.preventDefault());
 		// A drag that ends on a link must not follow it.
 		this.stage.addEventListener(
 			'click',
@@ -115,12 +131,15 @@ export class DiagramModal extends Modal {
 			this.fitToStage();
 			return;
 		}
-		const observer = new ResizeObserver(() => {
+		// The window's own constructor, so the observer also works when the modal opens in a popout window.
+		const Observer = (this.stage.win as typeof window).ResizeObserver;
+		this.observer = new Observer(() => {
 			if (this.stage.clientWidth === 0) return;
-			observer.disconnect();
+			this.observer?.disconnect();
+			this.observer = null;
 			this.fitToStage();
 		});
-		observer.observe(this.stage);
+		this.observer.observe(this.stage);
 	}
 
 	private stagePoint(event: MouseEvent): Point {
