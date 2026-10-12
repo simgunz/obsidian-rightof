@@ -16,11 +16,16 @@ context: |
   eslint-plugin-obsidianmd. Run everything with npm scripts: test, build, lint.
 
   Conventions:
-  - Pure logic lives in modules that do not import `obsidian`, so vitest can test
-    it directly. Obsidian glue (render children, modals, commands) stays thin.
+  - Pure logic lives in modules that do not import `obsidian` (render, svg, blocks,
+    viewport), so vitest tests them in jsdom. `display.ts` also avoids the import
+    but uses Obsidian's DOM helpers (createDiv, createEl). Obsidian glue (render
+    children, modals, commands) stays thin.
   - Never assign innerHTML. Turn reladraw's SVG string into DOM with DOMParser.
   - Style with Obsidian CSS variables so the plugin follows the user's theme.
-    Prefix every CSS class with `rightof-`.
+    Prefix every CSS class the plugin defines with `rightof-`; state classes use
+    Obsidian's `is-*` names (is-dragging, is-error).
+  - Every SVG from reladraw goes through the sanitiser in `svg.ts` before it
+    reaches the page: note text is untrusted.
   - UX follows Obsidian and the common diagram-plugin patterns: a static diagram
     in the note, Obsidian's own edit button, zoom and pan only in a modal.
   - Spec domains are named after user-facing features (diagram-rendering,

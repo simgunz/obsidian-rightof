@@ -39,6 +39,10 @@ describe('theme', () => {
 		expect(rectFills(svgOf(labelled, false, ''))).toEqual([THEMES.light!.background, THEMES.light!.background]);
 	});
 
+	test('a block that sets its own background keeps it', () => {
+		expect(rectFills(svgOf('diagram background: #ffeedd\nnode a "A"', false))[0]).toBe('#ffeedd');
+	});
+
 	test.each([true, false])('a named theme wins with its own background (dark: %s)', (dark) => {
 		const fills = rectFills(svgOf('diagram theme: nord\n' + labelled, dark));
 
