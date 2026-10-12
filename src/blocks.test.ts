@@ -42,7 +42,6 @@ describe('findBlocks', () => {
 
 	test('accepts up to three spaces of indent and spaces around the language', () => {
 		expect(findBlocks(note('   ``` reladraw ', 'node a', '   ```')).map((b) => b.source)).toEqual(['node a']);
-		expect(findBlocks(note('    ```reladraw', 'node a', '    ```'))).toEqual([]);
 	});
 
 	test('a backtick line whose info string holds a backtick is not a fence', () => {
@@ -51,6 +50,55 @@ describe('findBlocks', () => {
 
 	test('ignores other languages and a language that only starts with reladraw', () => {
 		expect(findBlocks(note('```mermaid', 'a --> b', '```', '```reladrawx', 'x', '```'))).toEqual([]);
+	});
+});
+
+describe('findBlocks in real notes', () => {
+	test('strips the indent of a fence inside a list item from its source', () => {
+		const text = note('- step', '  ```reladraw', '  node a "A"', '    node b "B" right of a', '  ```');
+
+		expect(findBlocks(text)).toEqual([{ startLine: 1, endLine: 4, source: 'node a "A"\n  node b "B" right of a' }]);
+	});
+
+	test('finds a fence inside a callout and strips the quote markers', () => {
+		const text = note('> [!note]', '> ```reladraw', '> node a "A"', '> ```', 'after');
+
+		expect(findBlocks(text)).toEqual([{ startLine: 1, endLine: 3, source: 'node a "A"' }]);
+	});
+
+	test('a block inside a quote ends where the quote ends', () => {
+		const text = note('> ```reladraw', '> node a "A"', 'outside the quote', '```reladraw', 'node b', '```');
+
+		expect(findBlocks(text)).toEqual([
+			{ startLine: 0, endLine: 1, source: 'node a "A"' },
+			{ startLine: 3, endLine: 5, source: 'node b' },
+		]);
+	});
+
+	test('reads CRLF line endings', () => {
+		expect(findBlocks('```reladraw\r\nnode a\r\n```')).toEqual([{ startLine: 0, endLine: 2, source: 'node a' }]);
+	});
+
+	test('skips the frontmatter', () => {
+		const text = note('---', 'x: |', '  ```', '---', '```reladraw', 'node a', '```');
+
+		expect(findBlocks(text).map((b) => b.startLine)).toEqual([4]);
+	});
+
+	test('skips blocks inside a %% comment', () => {
+		const text = note('%%', '```reladraw', 'node hidden', '```', '%%', '```reladraw', 'node shown', '```');
+
+		expect(findBlocks(text).map((b) => b.source)).toEqual(['node shown']);
+	});
+
+	test('a closing fence indented 4 or more spaces past the opening does not close it', () => {
+		const text = note('```reladraw', 'node a', '    ```', '```');
+
+		expect(findBlocks(text)).toEqual([{ startLine: 0, endLine: 3, source: 'node a\n    ```' }]);
+	});
+
+	test('an empty note has no blocks', () => {
+		expect(findBlocks('')).toEqual([]);
 	});
 });
 
