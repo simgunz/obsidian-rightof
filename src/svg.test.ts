@@ -100,6 +100,14 @@ describe('parseSvg', () => {
 		expect(parseSvg(document, '<svg><g></svg>')).toBeNull();
 	});
 
+	test('turns a CDATA section into plain text', () => {
+		const svg = parseSvg(document, '<svg xmlns="http://www.w3.org/2000/svg"><text><![CDATA[a < b]]></text></svg>')!;
+
+		const text = svg.querySelector('text')!;
+		expect(Array.from(text.childNodes, (node) => node.nodeType)).toEqual([Node.TEXT_NODE]);
+		expect(text.textContent).toBe('a < b');
+	});
+
 	test('returns null when the root is not an svg', () => {
 		expect(parseSvg(document, '<div xmlns="http://www.w3.org/1999/xhtml"/>')).toBeNull();
 	});

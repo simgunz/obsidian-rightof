@@ -73,7 +73,7 @@ const ALLOWED_FUNCTIONS = new Set(['url', 'rgb', 'rgba', 'hsl', 'hsla', 'matrix'
  * Keep only drawing: no scripts, HTML, style sheets, handlers, outside references or non-web links.
  */
 export function sanitizeSvg(svg: SVGSVGElement): void {
-	removeNonElementMarkup(svg);
+	keepOnlyElementsAndText(svg);
 	for (const el of [...svg.querySelectorAll('*')]) {
 		if (!svg.contains(el)) continue;
 		if (el.namespaceURI !== SVG_NS || !ALLOWED_ELEMENTS.has(el.localName)) {
@@ -93,12 +93,22 @@ export function sanitizeSvg(svg: SVGSVGElement): void {
 	}
 }
 
-/** A comment or processing instruction is inert here, but turns into live HTML if the SVG is ever reparsed as HTML. */
-function removeNonElementMarkup(svg: SVGSVGElement): void {
-	const walker = svg.ownerDocument.createTreeWalker(svg, NodeFilter.SHOW_COMMENT | NodeFilter.SHOW_PROCESSING_INSTRUCTION);
+/**
+ * A comment or processing instruction is inert here, but turns into live HTML if the SVG is ever reparsed as HTML.
+ * A CDATA section cannot be imported into an HTML document, so it becomes the text it holds.
+ */
+function keepOnlyElementsAndText(svg: SVGSVGElement): void {
+	const doc = svg.ownerDocument;
+	const walker = doc.createTreeWalker(
+		svg,
+		NodeFilter.SHOW_COMMENT | NodeFilter.SHOW_PROCESSING_INSTRUCTION | NodeFilter.SHOW_CDATA_SECTION,
+	);
 	const found: Node[] = [];
 	while (walker.nextNode()) found.push(walker.currentNode);
-	for (const node of found) node.parentNode?.removeChild(node);
+	for (const node of found) {
+		if (node.nodeType === Node.CDATA_SECTION_NODE) node.parentNode?.replaceChild(doc.createTextNode(node.textContent ?? ''), node);
+		else node.parentNode?.removeChild(node);
+	}
 }
 
 function cleanAttributes(el: Element): void {
