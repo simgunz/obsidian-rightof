@@ -125,7 +125,7 @@ function isSafeValue(value: string): boolean {
 	const calls = [...value.matchAll(/(?<![A-Za-z-])([A-Za-z-]+)\(([^()]*)/g)];
 	return (
 		calls.length === value.split('(').length - 1 &&
-		calls.every(([, name, args]) => ALLOWED_FUNCTIONS.has(name!) && (name !== 'url' || /^\s*['"]?#/.test(args!)))
+		calls.every(([, name, args]) => ALLOWED_FUNCTIONS.has(name!) && (name !== 'url' || /^[ \t\n\r\f]*['"]?#/.test(args!)))
 	);
 }
 

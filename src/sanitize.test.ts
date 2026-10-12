@@ -59,6 +59,14 @@ describe('sanitizeSvg removes what could run or reach out', () => {
 		expect(Array.from(svg.querySelector('rect')!.attributes, (a) => a.name)).toEqual([]);
 	});
 
+	test('url() led by a space that CSS reads as part of a path', () => {
+		const svg = clean('<rect fill="url( #g)" mask="url( #m)"/>');
+
+		const rect = svg.querySelector('rect')!;
+		expect(rect.hasAttribute('fill')).toBe(false);
+		expect(rect.getAttribute('mask')).toBe('url( #m)');
+	});
+
 	test('a long value is checked in linear time', () => {
 		const start = performance.now();
 
