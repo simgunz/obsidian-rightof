@@ -145,10 +145,13 @@ export class DiagramModal extends Modal {
 
 	private apply(view: View): void {
 		this.view = view;
+		// Resizing the SVG redraws it as a vector. A CSS scale() would stretch a cached bitmap,
+		// and Chromium redraws its text out of step with the shapes.
 		this.content.setCssProps({
 			'--rightof-x': `${view.x}px`,
 			'--rightof-y': `${view.y}px`,
-			'--rightof-scale': String(view.scale),
+			'--rightof-width': `${this.natural.width * view.scale}px`,
+			'--rightof-height': `${this.natural.height * view.scale}px`,
 		});
 		this.zoomLevel.setText(`${Math.round(view.scale * 100)}%`);
 	}

@@ -101,8 +101,7 @@
 	position: absolute;
 	top: 0;
 	left: 0;
-	transform-origin: 0 0;
-	transform: translate(var(--rightof-x, 0), var(--rightof-y, 0)) scale(var(--rightof-scale, 1));
+	transform: translate(var(--rightof-x, 0), var(--rightof-y, 0));
 }
 
 .rightof-stage.is-error .rightof-stage-content {
@@ -113,4 +112,6 @@
 .rightof-stage-content svg {
 	display: block;
 	max-width: none;
+	width: var(--rightof-width);
+	height: var(--rightof-height);
 }
