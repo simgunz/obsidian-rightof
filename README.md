@@ -49,6 +49,7 @@ In the large view:
 - The large view keeps the light or dark theme it opened with. Reopen it after switching.
 - A diagram inside a callout sits on the note's background colour, not the callout's.
 - reladraw lays out the whole diagram on every render, so a very large block can make typing in Live Preview feel slow.
+- A block longer than 64 KB, or a diagram wider or taller than 100,000 px, shows an error in place of the diagram.
 
 ## Install
 
