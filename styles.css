@@ -27,6 +27,8 @@
 }
 
 .rightof-diagram svg {
+	/* Beats an overflow attribute, so a drawing cannot cover or catch clicks outside its box. */
+	overflow: hidden;
 	display: block;
 	max-width: 100%;
 	height: auto;
