@@ -77,3 +77,7 @@ Plans and specs live in `openspec/` ([OpenSpec](https://github.com/Fission-AI/Op
 ## Name
 
 reladraw's NOTICE reserves the name "reladraw" for the upstream project, so this plugin is called Right Of.
+
+## License
+
+MIT, see [LICENSE](LICENSE). The bundled reladraw is Apache-2.0, see its [LICENSE](https://github.com/reladraw/reladraw/blob/main/LICENSE) and [NOTICE](https://github.com/reladraw/reladraw/blob/main/NOTICE).
