@@ -1,5 +1,8 @@
 import { compile, parse, SourceError, THEMES, type Theme } from 'reladraw';
 
+/** Parts of reladraw slow down faster than linearly with the source, and a block renders on every keystroke. */
+const MAX_SOURCE_LENGTH = 64_000;
+
 export type RenderResult =
 	| { ok: true; svg: string }
 	| { ok: false; line?: number; message: string };
@@ -13,6 +16,9 @@ export interface RenderOptions {
 }
 
 export function renderDiagram(source: string, options: RenderOptions): RenderResult {
+	if (source.length > MAX_SOURCE_LENGTH) {
+		return { ok: false, message: 'the diagram is longer than 64 KB, the most this plugin draws' };
+	}
 	try {
 		// A theme passed to compile overrides the file's own `diagram theme:`.
 		const theme = namesOwnTheme(source) ? undefined : modeTheme(options.dark, options.background);

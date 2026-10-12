@@ -81,3 +81,18 @@ describe('errorTitle', () => {
 		expect(errorTitle({ ok: false, message: 'x' })).toBe('reladraw:');
 	});
 });
+
+describe('size limit', () => {
+	test('a block over 64 KB is not compiled', () => {
+		const source = `node a "${'x'.repeat(64_000)}"`;
+
+		expect(renderDiagram(source, { dark: false })).toEqual({
+			ok: false,
+			message: 'the diagram is longer than 64 KB, the most this plugin draws',
+		});
+	});
+
+	test('a block just under the limit is compiled', () => {
+		expect(renderDiagram(`node a "${'x'.repeat(63_000)}"`, { dark: false }).ok).toBe(true);
+	});
+});
