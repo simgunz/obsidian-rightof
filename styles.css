@@ -10,6 +10,11 @@
 	transition: opacity 120ms ease-in-out;
 }
 
+.cm-preview-code-block .rightof-diagram {
+	/* Keeps the diagram's background off Obsidian's 1px inset hover outline. */
+	padding: 1px;
+}
+
 .cm-preview-code-block .rightof-actions {
 	/* Clears Obsidian's 30px edit button, which sits 4px from the corner. */
 	right: 38px;
