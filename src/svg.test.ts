@@ -48,6 +48,15 @@ describe('uniquifyIds', () => {
 describe('uniquifyIds edge cases', () => {
 	const svgNs = 'xmlns="http://www.w3.org/2000/svg"';
 
+	test('rewrites a long value in linear time', () => {
+		const svg = parse(`<svg ${svgNs}><linearGradient id="g" href="#${'url(#'.repeat(12_000)}"/></svg>`);
+		const start = performance.now();
+
+		uniquifyIds(svg);
+
+		expect(performance.now() - start).toBeLessThan(200);
+	});
+
 	test('leaves an svg without ids untouched', () => {
 		const source = `<svg ${svgNs}><rect fill="#abc" width="1" height="1"/></svg>`;
 		const svg = parse(source);

@@ -15,7 +15,7 @@ export function uniquifyIds(svg: SVGSVGElement): void {
 	if (renamed.size === 0) return;
 	for (const el of [svg, ...svg.querySelectorAll('*')]) {
 		for (const attr of el.attributes) {
-			let value = attr.value.replace(/url\((['"]?)#([^'")]+)\1\)/g, (match, quote: string, id: string) =>
+			let value = attr.value.replace(/url\((['"]?)#([^'"()]+)\1\)/g, (match, quote: string, id: string) =>
 				renamed.has(id) ? `url(${quote}#${renamed.get(id)}${quote})` : match,
 			);
 			if (attr.localName === 'href') {
