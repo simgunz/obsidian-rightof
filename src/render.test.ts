@@ -2,37 +2,48 @@ import { THEMES } from 'reladraw';
 import { describe, expect, test } from 'vitest';
 import { errorTitle, renderDiagram } from './render';
 
-function background(svg: string): string | undefined {
-	return /<rect[^>]*fill="([^"]+)"/.exec(svg)?.[1];
+function rectFills(svg: string): string[] {
+	return Array.from(svg.matchAll(/<rect[^>]*fill="([^"]+)"/g), (m) => m[1]!);
 }
 
-function svgOf(source: string, dark: boolean): string {
-	const result = renderDiagram(source, { dark });
+function svgOf(source: string, dark: boolean, background = '#123456'): string {
+	const result = renderDiagram(source, { dark, background });
 	if (!result.ok) throw new Error(result.message);
 	return result.svg;
 }
 
+const labelled = 'node a "A"\nnode b "B" right of a\nedge a -> b "HTTP"';
+
 describe('theme', () => {
-	test('dark mode uses the dark theme on a transparent background', () => {
+	test('dark mode uses the dark theme', () => {
 		const svg = svgOf('node a "A"', true);
 
-		expect(background(svg)).toBe('transparent');
 		expect(svg).toContain(THEMES.dark!.text);
 		expect(svg).not.toContain(THEMES.light!.text);
 	});
 
-	test('light mode uses the light theme on a transparent background', () => {
+	test('light mode uses the light theme', () => {
 		const svg = svgOf('node a "A"', false);
 
-		expect(background(svg)).toBe('transparent');
 		expect(svg).toContain(THEMES.light!.text);
 		expect(svg).not.toContain(THEMES.dark!.text);
 	});
 
-	test.each([true, false])('a named theme wins with its own background (dark: %s)', (dark) => {
-		const svg = svgOf('diagram theme: nord\nnode a "A"', dark);
+	test.each([true, false])('the page and the label boxes take the note background (dark: %s)', (dark) => {
+		const fills = rectFills(svgOf(labelled, dark));
 
-		expect(background(svg)).toBe(THEMES.nord!.background);
+		expect(fills.length).toBe(2);
+		expect(fills).toEqual(['#123456', '#123456']);
+	});
+
+	test('without a note background the theme keeps its own', () => {
+		expect(rectFills(svgOf(labelled, false, ''))).toEqual([THEMES.light!.background, THEMES.light!.background]);
+	});
+
+	test.each([true, false])('a named theme wins with its own background (dark: %s)', (dark) => {
+		const fills = rectFills(svgOf('diagram theme: nord\n' + labelled, dark));
+
+		expect(fills).toEqual([THEMES.nord!.background, THEMES.nord!.background]);
 	});
 });
 

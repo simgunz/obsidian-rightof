@@ -2,7 +2,7 @@
 
 ## 1. Render logic
 
-- [ ] 1.1 Give `renderDiagram` a `background` option that replaces `transparent` for diagrams that name no theme (falling back to the theme's own background when it is empty), and verify unit tests check that the page box and the edge-label box both carry that colour, and that a named theme still keeps its own
+- [x] 1.1 Give `renderDiagram` a `background` option that replaces `transparent` for diagrams that name no theme (falling back to the theme's own background when it is empty), and verify unit tests check that the page box and the edge-label box both carry that colour, and that a named theme still keeps its own
 
 ## 2. Obsidian glue
 
