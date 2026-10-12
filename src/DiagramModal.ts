@@ -1,6 +1,5 @@
 import { App, Modal, setIcon } from 'obsidian';
-import { renderDiagram } from './render';
-import { isDarkMode, noteBackground, showResult } from './svg';
+import { renderOptions, showDiagram } from './display';
 import { fit, panBy, zoomAt, type Point, type Size, type View } from './viewport';
 
 const BUTTON_STEP = 1.25;
@@ -29,8 +28,7 @@ export class DiagramModal extends Modal {
 		this.stage = this.contentEl.createDiv({ cls: 'rightof-stage' });
 		this.content = this.stage.createDiv({ cls: 'rightof-stage-content' });
 
-		const options = { dark: isDarkMode(this.contentEl), background: noteBackground(this.contentEl) };
-		const svg = showResult(this.content, renderDiagram(this.source, options));
+		const svg = showDiagram(this.content, this.source, renderOptions(this.contentEl));
 		if (!svg) {
 			toolbar.remove();
 			this.stage.addClass('is-error');

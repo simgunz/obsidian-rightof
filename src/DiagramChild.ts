@@ -1,11 +1,10 @@
 import { App, MarkdownRenderChild, setIcon } from 'obsidian';
 import { DiagramModal } from './DiagramModal';
-import { renderDiagram } from './render';
-import { isDarkMode, noteBackground, showResult } from './svg';
+import { renderOptions, sameOptions, showDiagram } from './display';
+import type { RenderOptions } from './render';
 
 export class DiagramChild extends MarkdownRenderChild {
-	private dark = false;
-	private background = '';
+	private options: RenderOptions = { dark: false };
 
 	constructor(
 		containerEl: HTMLElement,
@@ -19,19 +18,17 @@ export class DiagramChild extends MarkdownRenderChild {
 		this.render();
 		this.registerEvent(
 			this.app.workspace.on('css-change', () => {
-				const el = this.containerEl;
-				if (isDarkMode(el) !== this.dark || noteBackground(el) !== this.background) this.render();
+				if (!sameOptions(renderOptions(this.containerEl), this.options)) this.render();
 			}),
 		);
 	}
 
 	private render(): void {
 		const el = this.containerEl;
-		this.dark = isDarkMode(el);
-		this.background = noteBackground(el);
+		this.options = renderOptions(el);
 		el.empty();
 		el.addClass('rightof-diagram');
-		const svg = showResult(el, renderDiagram(this.source, { dark: this.dark, background: this.background }));
+		const svg = showDiagram(el, this.source, this.options);
 		if (svg) this.addExpandButton(el);
 	}
 

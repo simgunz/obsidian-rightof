@@ -29,4 +29,12 @@ export default defineConfig(
 		},
 	},
 	...obsidianmd.configs.recommended,
+	{
+		// Tests run in jsdom, which has none of Obsidian's DOM helpers.
+		files: ['src/**/*.test.ts'],
+		rules: {
+			'obsidianmd/prefer-create-el': 'off',
+			'obsidianmd/no-static-styles-assignment': 'off',
+		},
+	},
 );

@@ -1,30 +1,3 @@
-import { errorTitle, type RenderFailure, type RenderResult } from './render';
-
-export function showResult(el: HTMLElement, result: RenderResult): SVGSVGElement | null {
-	if (!result.ok) {
-		showError(el, result);
-		return null;
-	}
-	const svg = parseSvg(el.ownerDocument, result.svg);
-	if (svg) {
-		uniquifyIds(svg);
-		el.appendChild(svg);
-	} else {
-		showError(el, { ok: false, message: 'the diagram could not be displayed' });
-	}
-	return svg;
-}
-
-export function isDarkMode(el: HTMLElement): boolean {
-	return el.ownerDocument.body.hasClass('theme-dark');
-}
-
-/** Read from body: a block can still be detached when it renders, and detached elements resolve no variables. */
-export function noteBackground(el: HTMLElement): string {
-	const body = el.ownerDocument.body;
-	return body.ownerDocument.defaultView?.getComputedStyle(body).getPropertyValue('--background-primary').trim() ?? '';
-}
-
 let copies = 0;
 
 /**
@@ -50,15 +23,9 @@ export function uniquifyIds(svg: SVGSVGElement): void {
 	}
 }
 
-function parseSvg(doc: Document, markup: string): SVGSVGElement | null {
+export function parseSvg(doc: Document, markup: string): SVGSVGElement | null {
 	const parsed = new DOMParser().parseFromString(markup, 'image/svg+xml');
 	const root = parsed.documentElement;
 	if (root.nodeName !== 'svg' || parsed.querySelector('parsererror')) return null;
 	return doc.importNode(root, true) as unknown as SVGSVGElement;
-}
-
-function showError(el: HTMLElement, failure: RenderFailure): void {
-	const box = el.createDiv({ cls: 'rightof-error' });
-	box.createDiv({ cls: 'rightof-error-title', text: errorTitle(failure) });
-	box.createEl('pre', { cls: 'rightof-error-message', text: failure.message });
 }

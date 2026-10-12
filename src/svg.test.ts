@@ -1,6 +1,6 @@
 import { compile } from 'reladraw';
 import { describe, expect, test } from 'vitest';
-import { uniquifyIds } from './svg';
+import { parseSvg, uniquifyIds } from './svg';
 
 function parse(markup: string): SVGSVGElement {
 	return new DOMParser().parseFromString(markup, 'image/svg+xml').documentElement as unknown as SVGSVGElement;
@@ -42,5 +42,19 @@ describe('uniquifyIds', () => {
 		const id = svg.querySelector('path')!.id;
 		expect(id).not.toBe('p');
 		expect(svg.querySelector('use')!.getAttribute('href')).toBe(`#${id}`);
+	});
+});
+
+describe('parseSvg', () => {
+	test('returns the svg root for valid markup', () => {
+		expect(parseSvg(document, markup)?.nodeName).toBe('svg');
+	});
+
+	test('returns null for markup that is not well formed', () => {
+		expect(parseSvg(document, '<svg><g></svg>')).toBeNull();
+	});
+
+	test('returns null when the root is not an svg', () => {
+		expect(parseSvg(document, '<div xmlns="http://www.w3.org/1999/xhtml"/>')).toBeNull();
 	});
 });
