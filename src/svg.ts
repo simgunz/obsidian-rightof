@@ -8,17 +8,20 @@ let copies = 0;
 export function uniquifyIds(svg: SVGSVGElement): void {
 	const suffix = `-rightof${++copies}`;
 	const renamed = new Map<string, string>();
-	for (const el of Array.from(svg.querySelectorAll('[id]'))) {
+	for (const el of svg.querySelectorAll('[id]')) {
 		renamed.set(el.id, el.id + suffix);
 		el.id += suffix;
 	}
 	if (renamed.size === 0) return;
-	for (const el of [svg, ...Array.from(svg.querySelectorAll('*'))]) {
-		for (const attr of Array.from(el.attributes)) {
-			const value = attr.value
-				.replace(/url\(#([^)]+)\)/g, (match, id: string) => (renamed.has(id) ? `url(#${renamed.get(id)})` : match))
-				.replace(/^#(.+)$/, (match, id: string) => (renamed.has(id) ? `#${renamed.get(id)}` : match));
-			if (value !== attr.value) el.setAttribute(attr.name, value);
+	for (const el of [svg, ...svg.querySelectorAll('*')]) {
+		for (const attr of el.attributes) {
+			let value = attr.value.replace(/url\((['"]?)#([^'")]+)\1\)/g, (match, quote: string, id: string) =>
+				renamed.has(id) ? `url(${quote}#${renamed.get(id)}${quote})` : match,
+			);
+			if (attr.localName === 'href') {
+				value = value.replace(/^#(.+)$/, (match, id: string) => (renamed.has(id) ? `#${renamed.get(id)}` : match));
+			}
+			if (value !== attr.value) el.setAttributeNS(attr.namespaceURI, attr.name, value);
 		}
 	}
 }

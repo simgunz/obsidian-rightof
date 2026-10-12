@@ -45,6 +45,43 @@ describe('uniquifyIds', () => {
 	});
 });
 
+describe('uniquifyIds edge cases', () => {
+	const svgNs = 'xmlns="http://www.w3.org/2000/svg"';
+
+	test('leaves an svg without ids untouched', () => {
+		const source = `<svg ${svgNs}><rect fill="#abc" width="1" height="1"/></svg>`;
+		const svg = parse(source);
+
+		uniquifyIds(svg);
+
+		expect(new XMLSerializer().serializeToString(svg)).toBe(new XMLSerializer().serializeToString(parse(source)));
+	});
+
+	test('does not mistake a colour for an id reference', () => {
+		const svg = parse(`<svg ${svgNs}><g id="abc"/><rect fill="#abc"/></svg>`);
+
+		uniquifyIds(svg);
+
+		expect(svg.querySelector('rect')!.getAttribute('fill')).toBe('#abc');
+	});
+
+	test('rewrites quoted url references', () => {
+		const svg = parse(`<svg ${svgNs}><mask id="m"/><path mask="url('#m')"/></svg>`);
+
+		uniquifyIds(svg);
+
+		expect(svg.querySelector('path')!.getAttribute('mask')).toBe(`url('#${svg.querySelector('mask')!.id}')`);
+	});
+
+	test('leaves a reference to an unknown id alone', () => {
+		const svg = parse(`<svg ${svgNs}><g id="a"/><path marker-end="url(#elsewhere)"/></svg>`);
+
+		uniquifyIds(svg);
+
+		expect(svg.querySelector('path')!.getAttribute('marker-end')).toBe('url(#elsewhere)');
+	});
+});
+
 describe('parseSvg', () => {
 	test('returns the svg root for valid markup', () => {
 		expect(parseSvg(document, markup)?.nodeName).toBe('svg');
