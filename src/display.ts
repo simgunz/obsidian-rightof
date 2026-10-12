@@ -1,6 +1,8 @@
 import { errorTitle, renderDiagram, type RenderFailure, type RenderOptions } from './render';
 import { parseSvg, uniquifyIds } from './svg';
 
+const MAX_SIZE_PX = 100_000;
+
 /** Renders a diagram into `el`. Returns the inserted SVG, or null when an error box was shown instead. */
 export function showDiagram(el: HTMLElement, source: string, options: RenderOptions): SVGSVGElement | null {
 	const result = renderDiagram(source, options);
@@ -11,6 +13,10 @@ export function showDiagram(el: HTMLElement, source: string, options: RenderOpti
 	const svg = parseSvg(el.ownerDocument, result.svg);
 	if (!svg) {
 		showError(el, { ok: false, message: 'the diagram could not be displayed' });
+		return null;
+	}
+	if (!fitsOnScreen(svg)) {
+		showError(el, { ok: false, message: 'the diagram is too large to display' });
 		return null;
 	}
 	uniquifyIds(svg);
@@ -30,6 +36,13 @@ export function sameOptions(a: RenderOptions, b: RenderOptions): boolean {
 export function noteBackground(el: HTMLElement): string {
 	const body = el.ownerDocument.body;
 	return body.ownerDocument.defaultView?.getComputedStyle(body).getPropertyValue('--background-primary').trim() ?? '';
+}
+
+function fitsOnScreen(svg: SVGSVGElement): boolean {
+	return ['width', 'height'].every((name) => {
+		const size = Number(svg.getAttribute(name));
+		return size > 0 && size <= MAX_SIZE_PX;
+	});
 }
 
 function showError(el: HTMLElement, failure: RenderFailure): void {
