@@ -5,10 +5,19 @@
 set -euo pipefail
 
 repo=$(cd "$(dirname "$0")/.." && pwd)
-dir=${1:-$(mktemp -d)}
+dir=$(realpath -m "${1:-$(mktemp -d)}")
 vault=$dir/vault
 config=$dir/config
 plugin=$vault/.obsidian/plugins/rightof
+
+if [[ ! -f $repo/main.js ]]; then
+	echo "main.js is missing: run 'npm run build' first." >&2
+	exit 1
+fi
+if ! command -v obsidian >/dev/null; then
+	echo "The 'obsidian' command is not on PATH." >&2
+	exit 1
+fi
 
 mkdir -p "$plugin" "$config"
 cp "$repo"/tests/vault/*.md "$vault/"
@@ -18,9 +27,11 @@ done
 echo '["rightof"]' > "$vault/.obsidian/community-plugins.json"
 
 # A separate user-data-dir keeps the sandbox away from your real vaults and settings.
-id=$(printf '%s' "$vault" | sha256sum | cut -c1-16)
-printf '{"updateDisabled":true,"vaults":{"%s":{"path":"%s","ts":%s,"open":true}}}\n' \
-	"$id" "$vault" "$(date +%s000)" > "$config/obsidian.json"
+VAULT="$vault" node -e '
+	const id = require("node:crypto").createHash("sha256").update(process.env.VAULT).digest("hex").slice(0, 16);
+	const vaults = { [id]: { path: process.env.VAULT, ts: Date.now(), open: true } };
+	console.log(JSON.stringify({ updateDisabled: true, vaults }));
+' > "$config/obsidian.json"
 
 echo "Vault: $vault"
 flags=(--user-data-dir="$config")
