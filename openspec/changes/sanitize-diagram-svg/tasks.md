@@ -7,7 +7,7 @@
 
 ## 2. Integration
 
-- [ ] 2.1 In the sandbox Obsidian, verify that a hostile note renders its diagram without injected style or HTML, makes no request for the remote image, and that a web link still opens while a script link is gone
+- [x] 2.1 In the sandbox Obsidian, verify that a hostile note renders its diagram without injected style or HTML, makes no request for the remote image, and that a web link still opens while a script link is gone
 
 ## Workflow follow-up
 
