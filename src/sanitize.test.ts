@@ -48,6 +48,38 @@ describe('sanitizeSvg removes what could run or reach out', () => {
 		expect(rect.getAttribute('mask')).toBe('url(#m)');
 	});
 
+	test.each([
+		['an escaped url()', String.raw`\75 rl(https://example.com/p)`],
+		['an escaped letter inside url()', String.raw`u\rl(https://example.com/p)`],
+		['image-set()', "image-set('https://example.com/p.png' 1x)"],
+		['-webkit-image-set()', "-webkit-image-set('https://example.com/p.png' 1x)"],
+	])('%s reaching outside', (_name, value) => {
+		const svg = clean(`<rect fill="${value}" stroke="${value}" mask="${value}"/>`);
+
+		expect(Array.from(svg.querySelector('rect')!.attributes, (a) => a.name)).toEqual([]);
+	});
+
+	test('paints and transforms written with functions stay', () => {
+		const svg = clean('<rect fill="rgb(1, 2, 3)" stroke="url(\'#g\')" transform="translate(1 2) rotate(45)"/>');
+
+		const rect = svg.querySelector('rect')!;
+		expect(rect.getAttribute('fill')).toBe('rgb(1, 2, 3)');
+		expect(rect.getAttribute('stroke')).toBe("url('#g')");
+		expect(rect.getAttribute('transform')).toBe('translate(1 2) rotate(45)');
+	});
+
+	test('class and data attributes, which Obsidian reads to open its own links', () => {
+		const svg = clean('<a href="https://example.com" class="internal-link" data-href="x.desktop"><rect class="tag" data-tag="x"/></a>');
+
+		expect(markupOf(svg)).not.toMatch(/class=|data-/);
+	});
+
+	test('attributes outside the drawing vocabulary', () => {
+		const svg = clean('<rect width="1" tabindex="0" autofocus="" contenteditable="true" filter="url(#f)"/>');
+
+		expect(Array.from(svg.querySelector('rect')!.attributes, (a) => a.name)).toEqual(['width']);
+	});
+
 	test('comments and processing instructions', () => {
 		const svg = clean('<!-- note --><?x <img src=x onerror=alert(1)>?><rect/>');
 
@@ -98,6 +130,18 @@ describe('sanitizeSvg keeps reladraw output intact', () => {
 		['containers and decks', 'node box "Box"\nnode box.x "X"\nnode box.y "Y"\nnode d "Drive" deck: "Two" "Three" right of box'],
 		['masks and dashed lines', 'node a "A"\nnode b "B" right of a\nnode c "C" below a\nedge a -> b line: (pattern: dashed)\nedge c -> b line: (crossing: arc)'],
 		['web links', 'node a "A" url: "https://example.com"\nnode b "B" right of a\nedge a -> b'],
+		['a named theme', 'diagram theme: nord\nnode a "A"\nnode b "B" right of a\nedge a -> b'],
+		[
+			'a pasted icon with gradients and clipping',
+			[
+				'icon logo """<svg viewBox="0 0 10 10"><defs>',
+				'<linearGradient id="g" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox"><stop offset="0" stop-color="#f00" stop-opacity="0.5"/></linearGradient>',
+				'<clipPath id="c"><circle cx="5" cy="5" r="4"/></clipPath></defs>',
+				'<path d="M0 0h10v10z" fill="url(#g)" fill-rule="evenodd" clip-path="url(#c)" opacity="0.8"/>',
+				'<polygon points="0,0 5,5 0,10" stroke="currentColor" stroke-miterlimit="4" transform="rotate(10 5 5)"/>',
+				'</svg>"""\nnode a "A" icon: logo',
+			].join(''),
+		],
 	])('%s', (_name, source) => {
 		const svg = parse(compile(source));
 		const before = markupOf(svg);
